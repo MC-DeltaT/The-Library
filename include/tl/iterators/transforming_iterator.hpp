@@ -1,10 +1,10 @@
-#ifndef TL_ITERATORS_TRANSFORMING_ITERATOR
-#define TL_ITERATORS_TRANSFORMING_ITERATOR
+#ifndef TL_ITERATORS_TRANSFORMING_ITERATOR_HPP
+#define TL_ITERATORS_TRANSFORMING_ITERATOR_HPP
 
 
-#include <iterator>								// std::advance, std::iterator_traits
-#include <tc/type_support/remove_cvref.hpp>		// tc::type_support::remove_cvref_t
-#include <type_traits>							// std::invoke_result_t
+#include <functional>		// std::invoke
+#include <iterator>			// std::advance, std::iterator_traits
+#include <type_traits>		// std::decay_t, std::invoke_result_t
 
 
 namespace tl::iterators {
@@ -17,7 +17,7 @@ namespace tl::iterators {
 
 		using iterator_type = Iterator;
 		using reference = std::invoke_result_t<UnaryFunction, typename std::iterator_traits<Iterator>::reference>;
-		using value_type = type_support::remove_cvref_t<reference>;
+		using value_type = std::decay_t<reference>;
 		using difference_type = typename std::iterator_traits<Iterator>::difference_type;
 		using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
 
@@ -82,18 +82,18 @@ namespace tl::iterators {
 			Dereferences base iterator, applies the function, then returns the result. */
 		reference operator*() const
 		{
-			return _func(*_it);
+			return std::invoke(_func, *_it);
 		}
 
 		/* Subscript - offset dereference.
 			Offset dereferences base iterator, applies the function, then returns the result. */
 		reference operator[](difference_type n) const
 		{
-			return _func(_it[n]);
+			return std::invoke(_func, _it[n]);
 		}
 
 		/* Pre-increment - single advance.
-			Pre-increments base iterator. Returns new state. */
+			Pre-increments base iterator, then returns the new state. */
 		transforming_iterator& operator++()
 		{
 			++_it;
@@ -102,7 +102,7 @@ namespace tl::iterators {
 		}
 
 		/* Post-increment - single advance.
-			Post-increments base iterator. Returns previous state. */
+			Calls operator++(), then returns the previous state. */
 		transforming_iterator operator++(int)
 		{
 			auto tmp = *this;
@@ -113,7 +113,7 @@ namespace tl::iterators {
 		}
 
 		/* Pre-decrement - single backwards advance.
-			Pre-decrements base iterator. Returns new state. */
+			Pre-decrements base iterator, then returns the new state. */
 		transforming_iterator& operator--()
 		{
 			--_it;
@@ -122,7 +122,7 @@ namespace tl::iterators {
 		}
 
 		/* Post-decrement - single backwards advance.
-			Post-decrements base iterator. Returns previous state. */
+			Calls operator--(), then returns the previous state. */
 		transforming_iterator operator--(int)
 		{
 			auto tmp = *this;
@@ -136,13 +136,13 @@ namespace tl::iterators {
 		/* General functions */
 
 		// Gets the base iterator.
-		Iterator base() const
+		Iterator const& base() const
 		{
 			return _it;
 		}
 
 		// Gets the transformer function.
-		UnaryFunction function() const
+		UnaryFunction const& function() const
 		{
 			return _func;
 		}
@@ -154,6 +154,64 @@ namespace tl::iterators {
 		UnaryFunction _func;
 		Iterator _it;
 	};
+
+
+
+	template<typename Iterator, typename UnaryFunction>
+	transforming_iterator<Iterator, UnaryFunction> operator+(transforming_iterator<Iterator, UnaryFunction> const& lhs,
+		typename transforming_iterator<Iterator, UnaryFunction>::difference_type rhs)
+	{
+		auto tmp = lhs;
+		tmp += rhs;
+
+		return tmp;
+	}
+
+	template<typename Iterator, typename UnaryFunction>
+	transforming_iterator<Iterator, UnaryFunction> operator-(transforming_iterator<Iterator, UnaryFunction> const& lhs,
+		typename transforming_iterator<Iterator, UnaryFunction>::difference_type rhs)
+	{
+		auto tmp = lhs;
+		tmp -= rhs;
+
+		return tmp;
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator==(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() == rhs.base();
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator!=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() != rhs.base();
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator<(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() < rhs.base();
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator<=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() <= rhs.base();
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator>(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() > rhs.base();
+	}
+
+	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
+	bool operator>=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	{
+		return lhs.base() >= rhs.base();
+	}
 
 }
 
