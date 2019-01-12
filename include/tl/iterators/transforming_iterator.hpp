@@ -216,12 +216,12 @@ namespace tl::iterators {
 }
 
 
-/* Specialisation for tl::iterators::transforming_iterator.
- 	Does not provide the pointer type, because it makes no sense for that iterator type, and is never used anyway. */
+// Specialisation for tl::iterators::transforming_iterator.
 template<typename Iterator, typename UnaryFunction>
 struct std::iterator_traits<tl::iterators::transforming_iterator<Iterator, UnaryFunction>> {
 	using value_type = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::value_type;
 	using reference = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::reference;
+	using pointer = void;
 	using difference_type = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::difference_type;
 	using iterator_category = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::iterator_category;
 };
