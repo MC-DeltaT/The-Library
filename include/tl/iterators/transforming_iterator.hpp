@@ -166,6 +166,16 @@ namespace tl::iterators {
 
 		return tmp;
 	}
+	
+	template<typename Iterator, typename UnaryFunction>
+	transforming_iterator<Iterator, UnaryFunction> operator+(typename transforming_iterator<Iterator, UnaryFunction>::difference_type lhs,
+		transforming_iterator<Iterator, UnaryFunction> const& rhs)
+	{
+		auto tmp = rhs;
+		tmp += lhs;
+
+		return tmp;
+	}
 
 	template<typename Iterator, typename UnaryFunction>
 	transforming_iterator<Iterator, UnaryFunction> operator-(transforming_iterator<Iterator, UnaryFunction> const& lhs,
