@@ -3,7 +3,7 @@
 
 
 #include <functional>		// std::invoke
-#include <iterator>			// std::advance, std::iterator_traits
+#include <iterator>			// std::iterator_traits
 #include <type_traits>		// std::decay_t, std::invoke_result_t
 
 
@@ -64,7 +64,7 @@ namespace tl::iterators {
 			Advances base iterator by n. */
 		transforming_iterator& operator+=(difference_type n)
 		{
-			std::advance(_it, n);
+			_it += n;
 
 			return *this;
 		}
@@ -73,7 +73,7 @@ namespace tl::iterators {
 			Advances base iterator by -n. */
 		transforming_iterator& operator-=(difference_type n)
 		{
-			std::advance(_it, -n);
+			_it -= n;
 
 			return *this;
 		}
