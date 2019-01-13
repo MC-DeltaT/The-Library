@@ -29,7 +29,7 @@ namespace tl::iterators {
 		~transforming_iterator() = default;
 
 		/* Default constructor.
-			Value-initializes base iterator and function object. */
+			Value-initializes the base iterator and function object. */
 		transforming_iterator() :
 			_func(),
 			_it()
@@ -43,7 +43,7 @@ namespace tl::iterators {
 			Defaulted. */
 		transforming_iterator(transforming_iterator&&) = default;
 
-		// Constructor from base iterator and function.
+		// Constructor from the base iterator and function.
 		transforming_iterator(Iterator base, UnaryFunction func) :
 			_func(func),
 			_it(base)
@@ -52,16 +52,16 @@ namespace tl::iterators {
 
 		/* Operators */
 
-		/* Simple assignment - copy.
+		/* Simple assignment (copy).
 			Defaulted. */
 		transforming_iterator& operator=(transforming_iterator const&) = default;
 
-		/* Simple assignment - move.
+		/* Simple assignment (move).
 			Defaulted. */
 		transforming_iterator& operator=(transforming_iterator&&) = default;
 
-		/* Addition assignment - advance.
-			Advances base iterator by n. */
+		/* Addition assignment.
+			Advances the base iterator by n. */
 		transforming_iterator& operator+=(difference_type n)
 		{
 			_it += n;
@@ -69,8 +69,8 @@ namespace tl::iterators {
 			return *this;
 		}
 
-		/* Subtraction assignment - backwards advance.
-			Advances base iterator by -n. */
+		/* Subtraction assignment.
+			Advances the base iterator by -n. */
 		transforming_iterator& operator-=(difference_type n)
 		{
 			_it -= n;
@@ -78,22 +78,22 @@ namespace tl::iterators {
 			return *this;
 		}
 
-		/* Indirection - iterator dereference.
-			Dereferences base iterator, applies the function, then returns the result. */
+		/* Indirection.
+			Dereferences the base iterator, applies the function, then returns the result. */
 		reference operator*() const
 		{
 			return std::invoke(_func, *_it);
 		}
 
-		/* Subscript - offset dereference.
-			Offset dereferences base iterator, applies the function, then returns the result. */
+		/* Subscript.
+			Dereferences the base iterator at an offset of n, applies the function, then returns the result. */
 		reference operator[](difference_type n) const
 		{
 			return std::invoke(_func, _it[n]);
 		}
 
-		/* Pre-increment - single advance.
-			Pre-increments base iterator, then returns the new state. */
+		/* Pre-increment.
+			Increments the base iterator, then returns the new state. */
 		transforming_iterator& operator++()
 		{
 			++_it;
@@ -101,8 +101,8 @@ namespace tl::iterators {
 			return *this;
 		}
 
-		/* Post-increment - single advance.
-			Calls operator++(), then returns the previous state. */
+		/* Post-increment.
+			Increments the base iterator, then returns the previous state. */
 		transforming_iterator operator++(int)
 		{
 			auto tmp = *this;
@@ -112,8 +112,8 @@ namespace tl::iterators {
 			return tmp;
 		}
 
-		/* Pre-decrement - single backwards advance.
-			Pre-decrements base iterator, then returns the new state. */
+		/* Pre-decrement.
+			Decrements the base iterator, then returns the new state. */
 		transforming_iterator& operator--()
 		{
 			--_it;
@@ -121,8 +121,8 @@ namespace tl::iterators {
 			return *this;
 		}
 
-		/* Post-decrement - single backwards advance.
-			Calls operator--(), then returns the previous state. */
+		/* Post-decrement.
+			Decrements the base iterator, then returns the previous state. */
 		transforming_iterator operator--(int)
 		{
 			auto tmp = *this;
@@ -166,7 +166,7 @@ namespace tl::iterators {
 
 		return tmp;
 	}
-	
+
 	template<typename Iterator, typename UnaryFunction>
 	transforming_iterator<Iterator, UnaryFunction> operator+(typename transforming_iterator<Iterator, UnaryFunction>::difference_type lhs,
 		transforming_iterator<Iterator, UnaryFunction> const& rhs)
@@ -226,7 +226,7 @@ namespace tl::iterators {
 }
 
 
-// Specialisation for tl::iterators::transforming_iterator.
+// Specialization for tl::iterators::transforming_iterator.
 template<typename Iterator, typename UnaryFunction>
 struct std::iterator_traits<tl::iterators::transforming_iterator<Iterator, UnaryFunction>> {
 	using value_type = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::value_type;
