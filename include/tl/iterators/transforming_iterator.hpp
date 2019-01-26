@@ -186,7 +186,7 @@ namespace tl::iterators {
 
 		return tmp;
 	}
-	
+
 	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
 	auto operator-(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
 	{

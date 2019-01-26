@@ -8,21 +8,21 @@
 
 
 namespace tl::type_support {
-	
+
 	namespace detail {
-		
+
 		// Matches non-promotable types.
 		template<typename T, typename = void>
 		struct promote_base {
 			using type = T;
 		};
-		
+
 		// Matches promotable types.
 		template<typename T>
 		struct promote_base<T, std::enable_if_t<std::is_integral_v<T> || is_unscoped_enum_v<T>, void>> {
 			using type = decltype(+std::declval<T>());
 		};
-		
+
 	}
 
 	// Provides type member type which is the integer promoted T if T may undergo integer promotion, otherwise is T.
@@ -32,7 +32,7 @@ namespace tl::type_support {
 
 	template<typename T>
 	using promote_t = typename promote<T>::type;
-	
+
 }
 
 
