@@ -10,7 +10,7 @@ namespace tl::type_support {
 	
 	namespace detail {
 		
-		// `std::true_type` if `T` is `int` or any size/signedness modification thereof, otherwise std::false_type.
+		// std::true_type if T is int or any size/signedness modification thereof, otherwise std::false_type.
 		template<typename T>
 		struct is_int_base : is_any_of<T, short, int, long, long long,
 			unsigned short, unsigned, unsigned long, unsigned long long> {};

@@ -7,6 +7,7 @@
 
 namespace tl::type_support {
 
+	// Provides type member type equivalent to removing reference and then cv qualifiers, if present, from T.
     template<typename T>
     struct remove_cvref {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;

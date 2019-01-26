@@ -8,7 +8,7 @@
 
 namespace tl::type_support {
 	
-	// Provides member type alias type which is equivalent to adding N levels of pointers to T.
+	// Provides type member type which is equivalent to adding N levels of pointers to T.
 	template<typename T, std::size_t N>
 	struct add_pointers : std::add_pointer<typename add_pointers<T, N - 1>::type> {};
 

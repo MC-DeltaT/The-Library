@@ -25,7 +25,7 @@ namespace tl::type_support {
 		
 	}
 
-	// Provides member type alias type which is the integer promoted T if T may undergo integer promotion, otherwise is T.
+	// Provides type member type which is the integer promoted T if T may undergo integer promotion, otherwise is T.
 	template<typename T>
 	struct promote : detail::promote_base<T> {};
 
