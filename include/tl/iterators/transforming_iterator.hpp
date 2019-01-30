@@ -10,13 +10,13 @@
 namespace tl::iterators {
 
 	// Iterator adaptor that transforms iterated values with a function.
-	template<typename Iterator, typename UnaryFunction>
+	template<typename Iterator, typename UnaryOperation>
 	class transforming_iterator {
 	public:
 		/* Member types */
 
 		using iterator_type = Iterator;
-		using reference = std::invoke_result_t<UnaryFunction, typename std::iterator_traits<Iterator>::reference>;
+		using reference = std::invoke_result_t<UnaryOperation, typename std::iterator_traits<Iterator>::reference>;
 		using value_type = std::decay_t<reference>;
 		using difference_type = typename std::iterator_traits<Iterator>::difference_type;
 		using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
@@ -29,7 +29,7 @@ namespace tl::iterators {
 
 		// Value-initializes the base iterator and function object.
 		transforming_iterator() :
-			_func(),
+			_op(),
 			_it()
 		{}
 
@@ -40,8 +40,8 @@ namespace tl::iterators {
 		transforming_iterator(transforming_iterator&& other) = default;
 
 		// Constructs the base iterator and function object from the given values.
-		transforming_iterator(Iterator base, UnaryFunction func) :
-			_func(func),
+		transforming_iterator(Iterator base, UnaryOperation op) :
+			_op(op),
 			_it(base)
 		{}
 
@@ -73,13 +73,13 @@ namespace tl::iterators {
 		// Dereferences the base iterator, applies the function, then returns the result.
 		reference operator*() const
 		{
-			return std::invoke(_func, *_it);
+			return std::invoke(_op, *_it);
 		}
 
 		// Dereferences the base iterator at an offset of n, applies the function, then returns the result.
 		reference operator[](difference_type n) const
 		{
-			return std::invoke(_func, _it[n]);
+			return std::invoke(_op, _it[n]);
 		}
 
 		// Increments the base iterator, then returns the new state.
@@ -128,24 +128,24 @@ namespace tl::iterators {
 		}
 
 		// Gets the transformer function.
-		UnaryFunction const& function() const
+		UnaryOperation const& operation() const
 		{
-			return _func;
+			return _op;
 		}
 
 
 	private:
 		/* Variables */
 
-		UnaryFunction _func;
 		Iterator _it;
+		UnaryOperation _op;
 	};
 
 
 	// Returns a copy of lhs advanced by rhs.
-	template<typename Iterator, typename UnaryFunction>
-	transforming_iterator<Iterator, UnaryFunction> operator+(transforming_iterator<Iterator, UnaryFunction> const& lhs,
-		typename transforming_iterator<Iterator, UnaryFunction>::difference_type rhs)
+	template<typename Iterator, typename UnaryOperation>
+	transforming_iterator<Iterator, UnaryOperation> operator+(transforming_iterator<Iterator, UnaryOperation> const& lhs,
+		typename transforming_iterator<Iterator, UnaryOperation>::difference_type rhs)
 	{
 		auto tmp = lhs;
 		tmp += rhs;
@@ -154,9 +154,9 @@ namespace tl::iterators {
 	}
 
 	// Returns a copy of rhs advanced by lhs.
-	template<typename Iterator, typename UnaryFunction>
-	transforming_iterator<Iterator, UnaryFunction> operator+(typename transforming_iterator<Iterator, UnaryFunction>::difference_type lhs,
-		transforming_iterator<Iterator, UnaryFunction> const& rhs)
+	template<typename Iterator, typename UnaryOperation>
+	transforming_iterator<Iterator, UnaryOperation> operator+(typename transforming_iterator<Iterator, UnaryOperation>::difference_type lhs,
+		transforming_iterator<Iterator, UnaryOperation> const& rhs)
 	{
 		auto tmp = rhs;
 		tmp += lhs;
@@ -165,9 +165,9 @@ namespace tl::iterators {
 	}
 
 	// Returns a copy of lhs advanced by -rhs.
-	template<typename Iterator, typename UnaryFunction>
-	transforming_iterator<Iterator, UnaryFunction> operator-(transforming_iterator<Iterator, UnaryFunction> const& lhs,
-		typename transforming_iterator<Iterator, UnaryFunction>::difference_type rhs)
+	template<typename Iterator, typename UnaryOperation>
+	transforming_iterator<Iterator, UnaryOperation> operator-(transforming_iterator<Iterator, UnaryOperation> const& lhs,
+		typename transforming_iterator<Iterator, UnaryOperation>::difference_type rhs)
 	{
 		auto tmp = lhs;
 		tmp -= rhs;
@@ -176,50 +176,50 @@ namespace tl::iterators {
 	}
 
 	// The distance between lhs and rhs is the difference between their base iterators.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	auto operator-(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	auto operator-(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() - rhs.base();
 	}
 
 	// lhs and rhs are considered equal if their base iterators are equal.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator==(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator==(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() == rhs.base();
 	}
 
 	// lhs and rhs are considered unequal if their base iterators are unequal.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator!=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator!=(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() != rhs.base();
 	}
 
 	// lhs is considered less than rhs if lhs's base iterator is less than rhs's base iterator.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator<(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator<(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() < rhs.base();
 	}
 
 	// lhs is considered less than or equal to rhs is lhs's base iterator is less than or equal to rhs's base iterator.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator<=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator<=(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() <= rhs.base();
 	}
 
 	// lhs is considered greater than rhs if lhs's base iterator is greater than rhs's base iterator.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator>(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator>(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() > rhs.base();
 	}
 
 	// lhs is considered greater than or equal to rhs if lhs's base iterator is greater than or equal to rhs's base iterator.
-	template<typename Iterator1, typename UnaryFunction1, typename Iterator2, typename UnaryFunction2>
-	bool operator>=(transforming_iterator<Iterator1, UnaryFunction1> const& lhs, transforming_iterator<Iterator2, UnaryFunction2> const& rhs)
+	template<typename Iterator1, typename UnaryOperation1, typename Iterator2, typename UnaryOperation2>
+	bool operator>=(transforming_iterator<Iterator1, UnaryOperation1> const& lhs, transforming_iterator<Iterator2, UnaryOperation2> const& rhs)
 	{
 		return lhs.base() >= rhs.base();
 	}
@@ -228,13 +228,13 @@ namespace tl::iterators {
 
 
 // Specialization for tl::iterators::transforming_iterator.
-template<typename Iterator, typename UnaryFunction>
-struct std::iterator_traits<tl::iterators::transforming_iterator<Iterator, UnaryFunction>> {
-	using value_type = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::value_type;
-	using reference = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::reference;
+template<typename Iterator, typename UnaryOperation>
+struct std::iterator_traits<tl::iterators::transforming_iterator<Iterator, UnaryOperation>> {
+	using value_type = typename tl::iterators::transforming_iterator<Iterator, UnaryOperation>::value_type;
+	using reference = typename tl::iterators::transforming_iterator<Iterator, UnaryOperation>::reference;
 	using pointer = void;
-	using difference_type = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::difference_type;
-	using iterator_category = typename tl::iterators::transforming_iterator<Iterator, UnaryFunction>::iterator_category;
+	using difference_type = typename tl::iterators::transforming_iterator<Iterator, UnaryOperation>::difference_type;
+	using iterator_category = typename tl::iterators::transforming_iterator<Iterator, UnaryOperation>::iterator_category;
 };
 
 
