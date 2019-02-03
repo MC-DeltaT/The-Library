@@ -24,22 +24,22 @@ namespace tl::iterators {
 
 		/* Special members */
 
-		// Destructs the base iterator and function object.
+		// Destructs the base iterator and transformer function object.
 		~transforming_iterator() = default;
 
-		// Value-initializes the base iterator and function object.
+		// Value-initializes the base iterator and transformer function object.
 		transforming_iterator() :
 			_op(),
 			_it()
 		{}
 
-		// Copy-constructs the base base iterator and function object from those of other.
+		// Copy-constructs the base base iterator and transformer function object from those of other.
 		transforming_iterator(transforming_iterator const& other) = default;
 
-		// Move-constructs the base iterator and function object from those of other.
+		// Move-constructs the base iterator and transformer function object from those of other.
 		transforming_iterator(transforming_iterator&& other) = default;
 
-		// Constructs the base iterator and function object from the given values.
+		// Constructs the base iterator and transformer function object from the given values.
 		transforming_iterator(Iterator base, UnaryOperation op) :
 			_op(op),
 			_it(base)
@@ -48,10 +48,10 @@ namespace tl::iterators {
 
 		/* Operators */
 
-		// Copy-assigns the base iterator and function object from those of rhs.
+		// Copy-assigns the base iterator and transformer function object from those of rhs.
 		transforming_iterator& operator=(transforming_iterator const& rhs) = default;
 
-		// Move-assigns the base iterator and function object from those of rhs.
+		// Move-assigns the base iterator and transformer function object from those of rhs.
 		transforming_iterator& operator=(transforming_iterator&& rhs) = default;
 
 		// Advances the base iterator by n.

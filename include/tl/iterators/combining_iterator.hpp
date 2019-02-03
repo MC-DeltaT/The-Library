@@ -42,13 +42,13 @@ namespace tl::iterators {
 	public:
 		/* Special members */
 
-		// Value-initializes the base iterators and function object.
+		// Value-initializes the base iterators and combiner function object.
 		combining_iterator() :
 			_op(),
 			_impl_type()
 		{}
 
-		// Constructs the base iterators and function object from the given values.
+		// Constructs the base iterators and combiner function object from the given values.
 		explicit combining_iterator(Operation op, Iterators... iterators) :
 			_op(op),
 			_impl_type(detail::make_combining_iterator_impl(_op, iterators...))
