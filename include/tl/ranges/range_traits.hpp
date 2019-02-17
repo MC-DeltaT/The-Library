@@ -11,8 +11,8 @@ namespace tl::ranges {
 	// Provides the type traits of a range type.
 	template<typename Range>
 	struct range_traits {
-		using iterator = decltype(std::begin(std::declval<Range>()));
-		using sentinel = decltype(std::end(std::declval<Range>()));
+		using iterator = decltype(std::begin(std::declval<Range&>()));
+		using sentinel = decltype(std::end(std::declval<Range&>()));
 		using value_type = typename std::iterator_traits<iterator>::value_type;
 		using reference = typename std::iterator_traits<iterator>::reference;
 	};
