@@ -29,8 +29,8 @@ namespace tl::iterators {
 
 		// Value-initializes the base iterator and transformer function object.
 		transforming_iterator() :
+			_base()
 			_op(),
-			_it()
 		{}
 
 		// Copy-constructs the base base iterator and transformer function object from those of other.
@@ -41,8 +41,8 @@ namespace tl::iterators {
 
 		// Constructs the base iterator and transformer function object from the given values.
 		transforming_iterator(Iterator base, UnaryOperation op) :
+			_base(base)
 			_op(op),
-			_it(base)
 		{}
 
 
@@ -57,7 +57,7 @@ namespace tl::iterators {
 		// Advances the base iterator by n.
 		transforming_iterator& operator+=(difference_type n)
 		{
-			_it += n;
+			_base += n;
 
 			return *this;
 		}
@@ -65,7 +65,7 @@ namespace tl::iterators {
 		// Advances the base iterator by -n.
 		transforming_iterator& operator-=(difference_type n)
 		{
-			_it -= n;
+			_base -= n;
 
 			return *this;
 		}
@@ -73,19 +73,19 @@ namespace tl::iterators {
 		// Dereferences the base iterator, applies the function, then returns the result.
 		reference operator*() const
 		{
-			return std::invoke(_op, *_it);
+			return std::invoke(_op, *_base);
 		}
 
 		// Dereferences the base iterator at an offset of n, applies the function, then returns the result.
 		reference operator[](difference_type n) const
 		{
-			return std::invoke(_op, _it[n]);
+			return std::invoke(_op, _base[n]);
 		}
 
 		// Increments the base iterator, then returns the new state.
 		transforming_iterator& operator++()
 		{
-			++_it;
+			++_base;
 
 			return *this;
 		}
@@ -103,7 +103,7 @@ namespace tl::iterators {
 		// Decrements the base iterator, then returns the new state.
 		transforming_iterator& operator--()
 		{
-			--_it;
+			--_base;
 
 			return *this;
 		}
@@ -124,7 +124,7 @@ namespace tl::iterators {
 		// Gets the base iterator.
 		Iterator const& base() const
 		{
-			return _it;
+			return _base;
 		}
 
 		// Gets the transformer function.
@@ -137,7 +137,7 @@ namespace tl::iterators {
 	private:
 		/* Variables */
 
-		Iterator _it;
+		Iterator _base;
 		UnaryOperation _op;
 	};
 
