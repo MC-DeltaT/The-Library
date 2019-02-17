@@ -37,7 +37,7 @@ namespace tl::ranges {
 		// Move-constructs the base range and transformer function object from those of other.
 		transforming_range(transforming_range&& other) = default;
 
-		// Constructs the base range and transformer function object from those of other.
+		// Constructs the base range and transformer function object from the given values.
 		transforming_range(Range base, UnaryOperation op) :
 			_base(base),
 			_op(op)
