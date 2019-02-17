@@ -33,7 +33,7 @@ namespace tl::iterators {
 
 		// Value-initializes the base iterators.
 		zipping_iterator() :
-			_iterators()
+			_bases()
 		{}
 
 		// Copy-constructs the base iterators from those of other.
@@ -43,13 +43,13 @@ namespace tl::iterators {
 		zipping_iterator(zipping_iterator&& other) = default;
 
 		// Constructs the base iterators from a parameter pack of iterators.
-		explicit zipping_iterator(Iterators... iterators) :
-			_iterators(iterators...)
+		explicit zipping_iterator(Iterators... bases) :
+			_bases(bases...)
 		{}
 
 		// Constructs the base iterators from a tuple of iterators.
-		explicit zipping_iterator(std::tuple<Iterators...> iterators) :
-			_iterators(iterators)
+		explicit zipping_iterator(std::tuple<Iterators...> bases) :
+			_bases(bases)
 		{}
 
 
@@ -64,7 +64,7 @@ namespace tl::iterators {
 		// Advances the base iterators by n.
 		zipping_iterator& operator+=(difference_type n)
 		{
-			tuple::for_each(_iterators, [n](auto& it) {
+			tuple::for_each(_bases, [n](auto& it) {
 					it += n;
 				});
 
@@ -74,7 +74,7 @@ namespace tl::iterators {
 		// Advances the base iterators by -n.
 		zipping_iterator& operator-=(difference_type n)
 		{
-			tuple::for_each(_iterators, [n](auto& it) {
+			tuple::for_each(_bases, [n](auto& it) {
 					it -= n;
 				});
 
@@ -84,7 +84,7 @@ namespace tl::iterators {
 		// Returns a tuple containing the results of dereferencing each base iterator.
 		reference operator*() const
 		{
-			return tuple::transform(_iterators, [](auto const& it) -> decltype(auto) {
+			return tuple::transform(_bases, [](auto const& it) -> decltype(auto) {
 					return *it;
 				});
 		}
@@ -92,7 +92,7 @@ namespace tl::iterators {
 		// Returns a tuple containing the results of dereferencing each base iterator at an offset of n.
 		reference operator[](difference_type n) const
 		{
-			return tuple::transform(_iterators, [n](auto const& it) -> decltype(auto) {
+			return tuple::transform(_bases, [n](auto const& it) -> decltype(auto) {
 					return it[n];
 				});
 		}
@@ -100,7 +100,7 @@ namespace tl::iterators {
 		// Increments the base iterators, then returns the new state.
 		zipping_iterator& operator++()
 		{
-			tuple::for_each(_iterators, [](auto& it) {
+			tuple::for_each(_bases, [](auto& it) {
 					++it;
 				});
 
@@ -120,7 +120,7 @@ namespace tl::iterators {
 		// Decrements the base iterators, then returns the new state.
 		zipping_iterator& operator--()
 		{
-			tuple::for_each(_iterators, [](auto& it) {
+			tuple::for_each(_bases, [](auto& it) {
 					--it;
 				});
 
@@ -143,14 +143,14 @@ namespace tl::iterators {
 		// Gets a tuple of the base iterators.
 		std::tuple<Iterators...> const& base() const
 		{
-			return _iterators;
+			return _bases;
 		}
 
 
 	private:
 		/* Variables */
 
-		std::tuple<Iterators...> _iterators;
+		std::tuple<Iterators...> _bases;
 	};
 
 
