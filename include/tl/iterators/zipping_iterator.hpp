@@ -141,7 +141,7 @@ namespace tl::iterators {
 		/* General functions */
 
 		// Gets a tuple of the base iterators.
-		std::tuple<Iterators...> const& base() const
+		std::tuple<Iterators...> const& bases() const
 		{
 			return _bases;
 		}
@@ -189,7 +189,7 @@ namespace tl::iterators {
 	template<typename... Iterators1, typename... Iterators2>
 	auto operator-(zipping_iterator<Iterators1...> const& lhs, zipping_iterator<Iterators2...> const& rhs)
 	{
-		auto diff = tuple::transform(lhs.base(), rhs.base(), std::minus());
+		auto diff = tuple::transform(lhs.bases(), rhs.bases(), std::minus());
 		return tuple::foldl(diff, [](auto a, auto b) {
 				if (std::abs(b) < std::abs(a)) {
 					return b;
@@ -204,7 +204,7 @@ namespace tl::iterators {
 	template<typename... Iterators1, typename... Iterators2>
 	bool operator==(zipping_iterator<Iterators1...> const& lhs, zipping_iterator<Iterators2...> const& rhs)
 	{
-		return tuple::foldl(tuple::transform(lhs.base(), rhs.base(), std::equal_to()), std::logical_or());
+		return tuple::foldl(tuple::transform(lhs.bases(), rhs.bases(), std::equal_to()), std::logical_or());
 	}
 
 	// lhs and rhs are considered unequal if none of their corresponding pairs of base iterators are equal.
