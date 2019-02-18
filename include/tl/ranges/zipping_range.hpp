@@ -60,7 +60,7 @@ namespace tl::ranges {
 		/* General functions */
 
 		// Gets a tuple of the base ranges.
-		std::tuple<Ranges...> const& bases() const
+		std::tuple<Ranges...> const& base() const
 		{
 			return _bases;
 		}
