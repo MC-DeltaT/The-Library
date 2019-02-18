@@ -29,8 +29,8 @@ namespace tl::iterators {
 
 		// Value-initializes the base iterator and transformer function object.
 		transforming_iterator() :
-			_base()
-			_op(),
+			_base(),
+			_op()
 		{}
 
 		// Copy-constructs the base base iterator and transformer function object from those of other.
@@ -41,8 +41,8 @@ namespace tl::iterators {
 
 		// Constructs the base iterator and transformer function object from the given values.
 		transforming_iterator(Iterator base, UnaryOperation op) :
-			_base(base)
-			_op(op),
+			_base(base),
+			_op(op)
 		{}
 
 
