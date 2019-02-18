@@ -5,8 +5,8 @@
 #include <iterator>										// std::iterator_traits
 #include <tl/iterators/transforming_iterator.hpp>		// tl::iterators::transforming_iterator
 #include <tl/iterators/zipping_iterator.hpp>			// tl::iterators::zipping_iterator
-#include <tuple>										// std::apply
-#include <utility>										// std::declval
+#include <tl/type_support/function_result.hpp>			// tl::type_support::function_result_t
+#include <tuple>										// std::apply, std::tuple
 
 
 namespace tl::iterators {
@@ -16,16 +16,16 @@ namespace tl::iterators {
 		/* Creates a combining iterator from a zipping_iterator inside a transforming_iterator, which is then forwarded formally by combining_iterator.
 			op is taken and used by reference; the function object itself resides in the wrapping instance of combining_iterator. */
 		template<typename Operation, typename... Iterators>
-		auto make_combining_iterator_impl(Operation& op, Iterators... iterators)
+		auto make_combining_iterator_impl(Operation& op, std::tuple<Iterators...> iterators)
 		{
 			// Need to inject a usage of std::apply to unpack the zipping_iterator's output tuple into arguments for the user-provided combiner function.
-			return transforming_iterator(zipping_iterator(iterators...), [&op](auto deref_tuple) {
+			return transforming_iterator(zipping_iterator(iterators), [&op](auto deref_tuple) {
 					return std::apply(op, deref_tuple);
 				});
 		}
 
 		template<typename Operation, typename... Iterators>
-		using combining_iterator_impl = decltype(make_combining_iterator_impl(std::declval<Operation>(), std::declval<Iterators>()...));
+		using combining_iterator_impl = type_support::function_result_t<decltype(make_combining_iterator_impl<Operation, Iterators...>)>;
 
 	}
 
@@ -49,9 +49,15 @@ namespace tl::iterators {
 		{}
 
 		// Constructs the base iterators and combiner function object from the given values.
-		explicit combining_iterator(Operation op, Iterators... iterators) :
+		explicit combining_iterator(Operation op, Iterators... bases) :
 			_op(op),
-			_impl_type(detail::make_combining_iterator_impl(_op, iterators...))
+			_impl_type(detail::make_combining_iterator_impl<Operation, Iterators...>(_op, std::tuple<Iterators...>(bases...)))
+		{}
+
+		// Constructs the base iterators and combiner function object from the given values.
+		combining_iterator(Operation op, std::tuple<Iterators...> bases) :
+			_op(op),
+			_impl_type(detail::make_combining_iterator_impl<Operation, Iterators...>(_op, bases))
 		{}
 
 
