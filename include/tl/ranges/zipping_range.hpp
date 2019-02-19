@@ -18,7 +18,9 @@ namespace tl::ranges {
 		/* Member types */
 
 		using iterator = iterators::zipping_iterator<typename range_traits<Ranges>::iterator...>;
+		using const_iterator = iterators::zipping_iterator<typename range_traits<Ranges const>::iterator...>;
 		using sentinel = iterators::zipping_iterator<typename range_traits<Ranges>::sentinel...>;
+		using const_sentinel = iterators::zipping_iterator<typename range_traits<Ranges const>::sentinel...>;
 
 
 		/* Special members */
@@ -66,15 +68,27 @@ namespace tl::ranges {
 		}
 
 		// Gets an iterator to the start of the zipped range.
-		iterator begin() const
+		iterator begin()
 		{
-			return iterator(tuple::transform(_bases, [](auto r) { return std::begin(r); }));
+			return iterator(tuple::transform(_bases, [](auto& r) { return std::begin(r); }));
+		}
+
+		// Gets an iterator to the start of the zipped range.
+		const_iterator begin() const
+		{
+			return const_iterator(tuple::transform(_bases, [](auto const& r) { return std::begin(r); }));
 		}
 
 		// Gets a sentinel to the end of the zipped range.
-		sentinel end() const
+		sentinel end()
 		{
-			return sentinel(tuple::transform(_bases, [](auto r) { return std::end(r); }));
+			return sentinel(tuple::transform(_bases, [](auto& r) { return std::end(r); }));
+		}
+
+		// Gets a sentinel to the end of the zipped range.
+		const_sentinel end() const
+		{
+			return const_sentinel(tuple::transform(_bases, [](auto const& r) { return std::end(r); }));
 		}
 
 
