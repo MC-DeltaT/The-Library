@@ -17,7 +17,9 @@ namespace tl::ranges {
 
 		using range_type = Range;
 		using iterator = iterators::transforming_iterator<typename range_traits<Range>::iterator, UnaryOperation>;
+		using const_iterator = iterators::transforming_iterator<typename range_traits<Range const>::iterator, UnaryOperation>;
 		using sentinel = iterators::transforming_iterator<typename range_traits<Range>::sentinel, UnaryOperation>;
+		using const_sentinel = iterators::transforming_iterator<typename range_traits<Range const>::sentinel, UnaryOperation>;
 
 
 		/* Special members */
@@ -62,13 +64,25 @@ namespace tl::ranges {
 		}
 
 		// Gets an iterator to the start of the transformed range.
-		iterator begin() const
+		iterator begin()
+		{
+			return {std::begin(_base), _op};
+		}
+
+		// Gets an iterator to the start of the transformed range.
+		const_iterator begin() const
 		{
 			return {std::begin(_base), _op};
 		}
 
 		// Gets a sentinel to the end of the transformed range.
-		sentinel end() const
+		sentinel end()
+		{
+			return {std::end(_base), _op};
+		}
+
+		// Gets a sentinel to the end of the transformed range.
+		const_sentinel end() const
 		{
 			return {std::end(_base), _op};
 		}
