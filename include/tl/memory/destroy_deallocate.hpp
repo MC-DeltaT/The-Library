@@ -1,5 +1,5 @@
-#ifndef TL_MEMORY_DESTROY_DESTRUCT_HPP
-#define TL_MEMORY_DESTROY_DESTRUCT_HPP
+#ifndef TL_MEMORY_DESTROY_DEALLOCATE_HPP
+#define TL_MEMORY_DESTROY_DEALLOCATE_HPP
 
 
 #include <memory>						// std::allocator_traits
@@ -11,7 +11,7 @@ namespace tl::memory {
 	/* Destructs and deallocates one object at ptr using the given allocator.
 		Calls alloc.deallocate(ptr, 1). The corresponding call to allocate() should have allocated exactly 1 object. */
 	template<class Allocator>
-	void destroy_destruct(Allocator& alloc, typename std::allocator_traits<Allocator>::pointer ptr)
+	void destroy_deallocate(Allocator& alloc, typename std::allocator_traits<Allocator>::pointer ptr)
 	{
 		std::allocator_traits<Allocator>::destroy(alloc, ptr);
 		std::allocator_traits<Allocator>::deallocate(alloc, ptr, 1);
@@ -21,7 +21,7 @@ namespace tl::memory {
 	/* Destructs and deallocates an array of count objects at ptr using the given allocator.
 		Calls alloc.deallocate(ptr, count). The corresponding call to allocate() should have allocated exactly count objects. */
 	template<class Allocator>
-	void destroy_destruct(Allocator& alloc, typename std::allocator_traits<Allocator>::pointer ptr, typename std::allocator_traits<Allocator>::size_type count)
+	void destroy_deallocate(Allocator& alloc, typename std::allocator_traits<Allocator>::pointer ptr, typename std::allocator_traits<Allocator>::size_type count)
 	{
 		destroy_n(alloc, ptr, count);
 		std::allocator_traits<Allocator>::deallocate(alloc, ptr, count);
