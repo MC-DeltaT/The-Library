@@ -7,6 +7,7 @@
 
 namespace tl::testing {
 
+	// Prints to std::cout on calling of member functions such as constructors and assignments.
 	struct dummy_class {
 		/* Special members */
 
