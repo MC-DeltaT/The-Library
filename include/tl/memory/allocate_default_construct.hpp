@@ -8,7 +8,8 @@
 
 namespace tl::memory {
 
-	// Allocates memory for and default constructs one object using the given allocator. Returns a pointer to the object.
+	/* Allocates memory for and default constructs one object using the given allocator. Returns a pointer to the object.
+		Calls alloc.allocate() with an argument of exactly 1. 1 should be passed to the corresponding call to alloc.deallocate(). */
 	template<class Allocator, typename... Args>
 	typename std::allocator_traits<Allocator>::pointer allocate_default_construct(Allocator& alloc)
 	{
@@ -18,7 +19,8 @@ namespace tl::memory {
 	}
 
 
-	// Allocates memory for and default constructs an array of count objects using the given allocator. Returns a pointer to the first object.
+	/* Allocates memory for and default constructs an array of count objects using the given allocator. Returns a pointer to the first object.
+		Calls alloc.allocate() with an argument of exactly count. The same value should be passed to the corresponding call to alloc.deallocate(). */
 	template<class Allocator, typename... Args>
 	typename std::allocator_traits<Allocator>::pointer
 		allocate_default_construct(Allocator& alloc, typename std::allocator_traits<Allocator>::size_type count)

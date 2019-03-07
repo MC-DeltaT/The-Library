@@ -8,7 +8,8 @@
 
 namespace tl::memory {
 
-	// Allocates memory for and constructs one object using the given allocator and constructor arguments. Returns a pointer to the object.
+	/* Allocates memory for and constructs one object using the given allocator and constructor arguments. Returns a pointer to the object.
+		Calls alloc.allocate() with an argument of exactly 1. 1 should be passed to the corresponding call to alloc.deallocate(). */
 	template<class Allocator, typename... Args>
 	typename std::allocator_traits<Allocator>::pointer allocate_construct(Allocator& alloc, Args&&... args)
 	{
