@@ -2,14 +2,15 @@
 #define TL_ITERATORS_ZIPPING_ITERATOR_HPP
 
 
-#include <cstdlib>					// std::abs
-#include <functional>				// std::equal_to, std::logical_or, std::minus
-#include <iterator>					// std::iterator_traits
+#include <cstdlib>			// std::abs
+#include <functional>		// std::equal_to, std::logical_or, std::minus
+#include <iterator>			// std::iterator_traits
+#include <tuple>			// std::tuple
+#include <type_traits>		// std::common_type_t
+
 #include <tl/tuple/foldl.hpp>		// tl::tuple::foldl
 #include <tl/tuple/for_each.hpp>	// tl::tuple::for_each
 #include <tl/tuple/transform.hpp>	// tl::tuple::transform
-#include <tuple>					// std::tuple
-#include <type_traits>				// std::common_type_t
 
 
 namespace tl::iterators {

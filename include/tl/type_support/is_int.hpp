@@ -2,8 +2,9 @@
 #define TL_TYPE_SUPPORT_IS_INT_HPP
 
 
+#include <type_traits>			// std::remove_cv_t
+
 #include <tl/type_support/is_any_of.hpp>		// tl::type_support::is_any_of
-#include <type_traits>							// std::remove_cv_t
 
 
 namespace tl::type_support {

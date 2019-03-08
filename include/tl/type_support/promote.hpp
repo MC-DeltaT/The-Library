@@ -2,9 +2,10 @@
 #define TL_TYPE_SUPPORT_PROMOTE_HPP
 
 
+#include <type_traits>			// std::enable_if_t, std::is_integral_v
+#include <utility>				// std::declval
+
 #include <tl/type_support/is_unscoped_enum.hpp>		// tl::type_support::is_unscoped_enum_v
-#include <type_traits>								// std::enable_if_t, std::is_integral_v
-#include <utility>									// std::declval
 
 
 namespace tl::type_support {

@@ -2,11 +2,12 @@
 #define TL_ITERATORS_COMBINING_ITERATOR_HPP
 
 
-#include <iterator>										// std::iterator_traits
+#include <iterator>		// std::iterator_traits
+#include <tuple>		// std::apply, std::tuple
+
 #include <tl/iterators/transforming_iterator.hpp>		// tl::iterators::transforming_iterator
 #include <tl/iterators/zipping_iterator.hpp>			// tl::iterators::zipping_iterator
 #include <tl/type_support/function_result.hpp>			// tl::type_support::function_result_t
-#include <tuple>										// std::apply, std::tuple
 
 
 namespace tl::iterators {

@@ -2,11 +2,12 @@
 #define TL_RANGES_COMBINING_RANGE_HPP
 
 
-#include <iterator>									// std::begin, std::end
+#include <iterator>			// std::begin, std::end
+#include <tuple>			// std::tuple
+
 #include <tl/iterators/combining_iterator.hpp>		// tl::iterators::combining_iterator
 #include <tl/ranges/range_traits.hpp>				// tl::ranges::range_traits
 #include <tl/tuple/transform.hpp>					// tl::tuple::transform
-#include <tuple>									// std::tuple
 
 
 namespace tl::ranges {
