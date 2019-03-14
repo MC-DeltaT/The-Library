@@ -6,7 +6,7 @@
 #include <tuple>			// std::tuple
 
 #include <tl/iterators/combining_iterator.hpp>		// tl::iterators::combining_iterator
-#include <tl/ranges/range_traits.hpp>				// tl::ranges::range_traits
+#include <tl/ranges/adaptor_base.hpp>				// tl::ranges::adaptor_base
 #include <tl/tuple/transform.hpp>					// tl::tuple::transform
 
 
@@ -14,16 +14,8 @@ namespace tl::ranges {
 
 	// Range adaptor that combines multiple ranges' corresponding elements with a function.
 	template<typename Operation, class... Ranges>
-	class combining_range {
+	class combining_range : public adaptor_base<combining_range<Operation, Ranges...>> {
 	public:
-		/* Member types */
-
-		using iterator = iterators::combining_iterator<Operation, typename range_traits<Ranges>::iterator...>;
-		using const_iterator = iterators::combining_iterator<Operation, typename range_traits<Ranges const>::iterator...>;
-		using sentinel = iterators::combining_iterator<Operation, typename range_traits<Ranges>::sentinel...>;
-		using const_sentinel = iterators::combining_iterator<Operation, typename range_traits<Ranges const>::sentinel...>;
-
-
 		/* Special members */
 
 		// Destructs the base ranges and combiner function object.
@@ -71,34 +63,28 @@ namespace tl::ranges {
 			return _bases;
 		}
 
-		// Gets an iterator to the start of the adapted range.
-		iterator begin()
-		{
-			return {_op, tuple::transform(_bases, [](auto& r) { return std::begin(r); })};
-		}
-
-		// Gets an iterator to the start of the adapted range.
-		const_iterator begin() const
-		{
-			return {_op, tuple::transform(_bases, [](auto const& r) { return std::begin(r); })};
-		}
-
-		// Gets a sentinel to the end of the adapted range.
-		sentinel end()
-		{
-			return {_op, tuple::transform(_bases, [](auto& r) { return std::end(r); })};
-		}
-
-		// Gets a sentinel to the end of the adapted range.
-		const_sentinel end() const
-		{
-			return {_op, tuple::transform(_bases, [](auto const& r) { return std::end(r); })};
-		}
-
 		// Gets the combiner function.
 		Operation const& operation() const
 		{
 			return _op;
+		}
+
+
+	protected:
+		/* General functions */
+
+		// Gets a (const) iterator to the start of the combined range.
+		template<class CombiningRange>
+		static auto _begin(CombiningRange& r)
+		{
+			return iterators::combining_iterator(r._op, tuple::transform(r._bases, [](auto& base) { return std::begin(base); }));
+		}
+
+		// Gets a (const) sentinel to the end of the combined range.
+		template<class CombiningRange>
+		static auto _end(CombiningRange& r)
+		{
+			return iterators::combining_iterator(r._op, tuple::transform(r._bases, [](auto& base) { return std::end(base); }));
 		}
 
 

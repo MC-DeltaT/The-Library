@@ -6,7 +6,7 @@
 #include <tuple>			// std::tuple
 
 #include <tl/iterators/zipping_iterator.hpp>	// tl::iterators::zipping_iterator
-#include <tl/ranges/range_traits.hpp>			// tl::ranges::range_traits
+#include <tl/ranges/adaptor_base.hpp>			// tl::ranges::adaptor_base
 #include <tl/tuple/transform.hpp>				// tl::tuple::transform
 
 
@@ -14,16 +14,8 @@ namespace tl::ranges {
 
 	// Range adaptor that zips multiple ranges into a single range of tuples.
 	template<class... Ranges>
-	class zipping_range {
+	class zipping_range : public adaptor_base<zipping_range<Ranges...>> {
 	public:
-		/* Member types */
-
-		using iterator = iterators::zipping_iterator<typename range_traits<Ranges>::iterator...>;
-		using const_iterator = iterators::zipping_iterator<typename range_traits<Ranges const>::iterator...>;
-		using sentinel = iterators::zipping_iterator<typename range_traits<Ranges>::sentinel...>;
-		using const_sentinel = iterators::zipping_iterator<typename range_traits<Ranges const>::sentinel...>;
-
-
 		/* Special members */
 
 		// Destructs the base ranges.
@@ -68,28 +60,22 @@ namespace tl::ranges {
 			return _bases;
 		}
 
-		// Gets an iterator to the start of the zipped range.
-		iterator begin()
+
+	protected:
+		/* General functions */
+
+		// Gets a (const) iterator to the start of the zipped range.
+		template<class ZippingRange>
+		static auto _begin(ZippingRange& r)
 		{
-			return iterator(tuple::transform(_bases, [](auto& r) { return std::begin(r); }));
+			return iterators::zipping_iterator(tuple::transform(r._bases, [](auto& base) { return std::begin(base); }));
 		}
 
-		// Gets an iterator to the start of the zipped range.
-		const_iterator begin() const
+		// Gets a (const) sentinel to the end of the zipped range.
+		template<class ZippingRange>
+		static auto _end(ZippingRange& r)
 		{
-			return const_iterator(tuple::transform(_bases, [](auto const& r) { return std::begin(r); }));
-		}
-
-		// Gets a sentinel to the end of the zipped range.
-		sentinel end()
-		{
-			return sentinel(tuple::transform(_bases, [](auto& r) { return std::end(r); }));
-		}
-
-		// Gets a sentinel to the end of the zipped range.
-		const_sentinel end() const
-		{
-			return const_sentinel(tuple::transform(_bases, [](auto const& r) { return std::end(r); }));
+			return iterators::zipping_iterator(tuple::transform(r._bases, [](auto& base) { return std::end(base); }));
 		}
 
 

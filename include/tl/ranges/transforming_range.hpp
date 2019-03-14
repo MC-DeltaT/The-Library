@@ -5,22 +5,18 @@
 #include <iterator>			// std::begin, std::end
 
 #include <tl/iterators/transforming_iterator.hpp>		// tl::iterators::transforming_iterator
-#include <tl/ranges/range_traits.hpp>					// tl::ranges::range_traits
+#include <tl/ranges/adaptor_base.hpp>					// tl::ranges::adaptor_base
 
 
 namespace tl::ranges {
 
 	// Range adaptor that transforms elements with a function.
 	template<class Range, typename UnaryOperation>
-	class transforming_range {
+	class transforming_range : public adaptor_base<transforming_range<Range, UnaryOperation>> {
 	public:
 		/* Member types */
 
 		using range_type = Range;
-		using iterator = iterators::transforming_iterator<typename range_traits<Range>::iterator, UnaryOperation>;
-		using const_iterator = iterators::transforming_iterator<typename range_traits<Range const>::iterator, UnaryOperation>;
-		using sentinel = iterators::transforming_iterator<typename range_traits<Range>::sentinel, UnaryOperation>;
-		using const_sentinel = iterators::transforming_iterator<typename range_traits<Range const>::sentinel, UnaryOperation>;
 
 
 		/* Special members */
@@ -64,34 +60,28 @@ namespace tl::ranges {
 			return _base;
 		}
 
-		// Gets an iterator to the start of the transformed range.
-		iterator begin()
-		{
-			return {std::begin(_base), _op};
-		}
-
-		// Gets an iterator to the start of the transformed range.
-		const_iterator begin() const
-		{
-			return {std::begin(_base), _op};
-		}
-
-		// Gets a sentinel to the end of the transformed range.
-		sentinel end()
-		{
-			return {std::end(_base), _op};
-		}
-
-		// Gets a sentinel to the end of the transformed range.
-		const_sentinel end() const
-		{
-			return {std::end(_base), _op};
-		}
-
 		// Gets the transformer function.
 		UnaryOperation const& operation() const
 		{
 			return _op;
+		}
+
+
+	protected:
+		/* General functions */
+
+		// Gets a (const) iterator to the start of the transformed range.
+		template<class TransformingRange>
+		static auto _begin(TransformingRange& r)
+		{
+			return iterators::transforming_iterator(std::begin(r._base), r._op);
+		}
+
+		// Gets a (const) sentinel to the end of the transformed range.
+		template<class TransformingRange>
+		static auto _end(TransformingRange& r)
+		{
+			return iterators::transforming_iterator(std::end(r._base), r._op);
 		}
 
 
