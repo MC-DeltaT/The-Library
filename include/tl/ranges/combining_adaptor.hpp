@@ -1,5 +1,5 @@
-#ifndef TL_RANGES_COMBINING_RANGE_HPP
-#define TL_RANGES_COMBINING_RANGE_HPP
+#ifndef TL_RANGES_COMBINING_ADAPTOR_HPP
+#define TL_RANGES_COMBINING_ADAPTOR_HPP
 
 
 #include <iterator>			// std::begin, std::end
@@ -14,33 +14,33 @@ namespace tl::ranges {
 
 	// Range adaptor that combines multiple ranges' corresponding elements with a function.
 	template<typename Operation, class... Ranges>
-	class combining_range : public adaptor_base<combining_range<Operation, Ranges...>> {
+	class combining_adaptor : public adaptor_base<combining_adaptor<Operation, Ranges...>> {
 	public:
 		/* Special members */
 
 		// Destructs the base ranges and combiner function object.
-		~combining_range() = default;
+		~combining_adaptor() = default;
 
 		// Value-initializes the base ranges and combiner function object.
-		combining_range() :
+		combining_adaptor() :
 			_bases(),
 			_op()
 		{}
 
 		// Copy-constructs the base ranges and combiner function object from those of other.
-		combining_range(combining_range const& other) = default;
+		combining_adaptor(combining_adaptor const& other) = default;
 
 		// Move-constructs the base ranges and combiner function object from those of other.
-		combining_range(combining_range&& other) = default;
+		combining_adaptor(combining_adaptor&& other) = default;
 
 		// Constructs the base ranges and combiner function object from the given values.
-		explicit combining_range(Operation op, Ranges... bases) :
+		explicit combining_adaptor(Operation op, Ranges... bases) :
 			_bases(bases...),
 			_op(op)
 		{}
 
 		// Constructs the base ranges and combiner function object from the given values.
-		combining_range(Operation op, std::tuple<Ranges...> bases) :
+		combining_adaptor(Operation op, std::tuple<Ranges...> bases) :
 			_bases(bases),
 			_op(op)
 		{}
@@ -49,10 +49,10 @@ namespace tl::ranges {
 		/* Operators */
 
 		// Copy-assigns the base ranges and combiner function object from those of rhs.
-		combining_range& operator=(combining_range const& rhs) = default;
+		combining_adaptor& operator=(combining_adaptor const& rhs) = default;
 
 		// Move-assigns the base ranges and combiner function object from those of rhs.
-		combining_range& operator=(combining_range&& rhs) = default;
+		combining_adaptor& operator=(combining_adaptor&& rhs) = default;
 
 
 		/* General functions */

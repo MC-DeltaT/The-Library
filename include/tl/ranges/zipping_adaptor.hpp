@@ -1,5 +1,5 @@
-#ifndef TL_RANGES_ZIPPING_RANGE_HPP
-#define TL_RANGES_ZIPPING_RANGE_HPP
+#ifndef TL_RANGES_ZIPPING_ADAPTOR_HPP
+#define TL_RANGES_ZIPPING_ADAPTOR_HPP
 
 
 #include <iterator>			// std::begin, std::end
@@ -14,31 +14,31 @@ namespace tl::ranges {
 
 	// Range adaptor that zips multiple ranges into a single range of tuples.
 	template<class... Ranges>
-	class zipping_range : public adaptor_base<zipping_range<Ranges...>> {
+	class zipping_adaptor : public adaptor_base<zipping_adaptor<Ranges...>> {
 	public:
 		/* Special members */
 
 		// Destructs the base ranges.
-		~zipping_range() = default;
+		~zipping_adaptor() = default;
 
 		// Value-initializes the base ranges.
-		zipping_range() :
+		zipping_adaptor() :
 			_bases()
 		{}
 
 		// Copy-constructs the base ranges from those of other.
-		zipping_range(zipping_range const& other) = default;
+		zipping_adaptor(zipping_adaptor const& other) = default;
 
 		// Move-constructs the base ranges from those of other.
-		zipping_range(zipping_range&& other) = default;
+		zipping_adaptor(zipping_adaptor&& other) = default;
 
 		// Constructs the base ranges from the given values in a parameter pack.
-		explicit zipping_range(Ranges... bases) :
+		explicit zipping_adaptor(Ranges... bases) :
 			_bases(bases...)
 		{}
 
 		// Constructs the base ranges from the given values in a tuple.
-		explicit zipping_range(std::tuple<Ranges...> bases) :
+		explicit zipping_adaptor(std::tuple<Ranges...> bases) :
 			_bases(bases)
 		{}
 
@@ -46,10 +46,10 @@ namespace tl::ranges {
 		/* Operators */
 
 		// Copy-assigns the base ranges from those of rhs.
-		zipping_range& operator=(zipping_range const& rhs) = default;
+		zipping_adaptor& operator=(zipping_adaptor const& rhs) = default;
 
 		// Move-assigns the base ranges from those of rhs.
-		zipping_range& operator=(zipping_range&& rhs) = default;
+		zipping_adaptor& operator=(zipping_adaptor&& rhs) = default;
 
 
 		/* General functions */

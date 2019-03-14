@@ -1,5 +1,5 @@
-#ifndef TL_RANGES_TRANSFORMING_RANGE_HPP
-#define TL_RANGES_TRANSFORMING_RANGE_HPP
+#ifndef TL_RANGES_TRANSFORMING_ADAPTOR_HPP
+#define TL_RANGES_TRANSFORMING_ADAPTOR_HPP
 
 
 #include <iterator>			// std::begin, std::end
@@ -12,7 +12,7 @@ namespace tl::ranges {
 
 	// Range adaptor that transforms elements with a function.
 	template<class Range, typename UnaryOperation>
-	class transforming_range : public adaptor_base<transforming_range<Range, UnaryOperation>> {
+	class transforming_adaptor : public adaptor_base<transforming_adaptor<Range, UnaryOperation>> {
 	public:
 		/* Member types */
 
@@ -22,22 +22,22 @@ namespace tl::ranges {
 		/* Special members */
 
 		// Destructs the base range and transformer function object.
-		~transforming_range() = default;
+		~transforming_adaptor() = default;
 
 		// Value-initializes the base range and transformer function object.
-		transforming_range() :
+		transforming_adaptor() :
 			_base(),
 			_op()
 		{}
 
 		// Copy-constructs the base range and transformer function object from those of other.
-		transforming_range(transforming_range const& other) = default;
+		transforming_adaptor(transforming_adaptor const& other) = default;
 
 		// Move-constructs the base range and transformer function object from those of other.
-		transforming_range(transforming_range&& other) = default;
+		transforming_adaptor(transforming_adaptor&& other) = default;
 
 		// Constructs the base range and transformer function object from the given values.
-		transforming_range(Range base, UnaryOperation op) :
+		transforming_adaptor(Range base, UnaryOperation op) :
 			_base(base),
 			_op(op)
 		{}
@@ -46,10 +46,10 @@ namespace tl::ranges {
 		/* Operators */
 
 		// Copy-assigns the base range and transformer function object from those of rhs.
-		transforming_range& operator=(transforming_range const& rhs) = default;
+		transforming_adaptor& operator=(transforming_adaptor const& rhs) = default;
 
 		// Move-assigns the base range and transformer function object from those of rhs.
-		transforming_range& operator=(transforming_range&& rhs) = default;
+		transforming_adaptor& operator=(transforming_adaptor&& rhs) = default;
 
 
 		/* General functions */
