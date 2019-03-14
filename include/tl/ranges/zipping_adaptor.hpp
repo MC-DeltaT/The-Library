@@ -65,15 +65,15 @@ namespace tl::ranges {
 		/* General functions */
 
 		// Gets a (const) iterator to the start of the zipped range.
-		template<class ZippingRange>
-		static auto _begin(ZippingRange& r)
+		template<class ZippingAdaptor>
+		static auto _begin(ZippingAdaptor& r)
 		{
 			return iterators::zipping_iterator(tuple::transform(r._bases, [](auto& base) { return std::begin(base); }));
 		}
 
 		// Gets a (const) sentinel to the end of the zipped range.
-		template<class ZippingRange>
-		static auto _end(ZippingRange& r)
+		template<class ZippingAdaptor>
+		static auto _end(ZippingAdaptor& r)
 		{
 			return iterators::zipping_iterator(tuple::transform(r._bases, [](auto& base) { return std::end(base); }));
 		}

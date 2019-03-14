@@ -71,15 +71,15 @@ namespace tl::ranges {
 		/* General functions */
 
 		// Gets a (const) iterator to the start of the transformed range.
-		template<class TransformingRange>
-		static auto _begin(TransformingRange& r)
+		template<class TransformingAdaptor>
+		static auto _begin(TransformingAdaptor& r)
 		{
 			return iterators::transforming_iterator(std::begin(r._base), r._op);
 		}
 
 		// Gets a (const) sentinel to the end of the transformed range.
-		template<class TransformingRange>
-		static auto _end(TransformingRange& r)
+		template<class TransformingAdaptor>
+		static auto _end(TransformingAdaptor& r)
 		{
 			return iterators::transforming_iterator(std::end(r._base), r._op);
 		}

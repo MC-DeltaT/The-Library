@@ -74,15 +74,15 @@ namespace tl::ranges {
 		/* General functions */
 
 		// Gets a (const) iterator to the start of the combined range.
-		template<class CombiningRange>
-		static auto _begin(CombiningRange& r)
+		template<class CombiningAdaptor>
+		static auto _begin(CombiningAdaptor& r)
 		{
 			return iterators::combining_iterator(r._op, tuple::transform(r._bases, [](auto& base) { return std::begin(base); }));
 		}
 
 		// Gets a (const) sentinel to the end of the combined range.
-		template<class CombiningRange>
-		static auto _end(CombiningRange& r)
+		template<class CombiningAdaptor>
+		static auto _end(CombiningAdaptor& r)
 		{
 			return iterators::combining_iterator(r._op, tuple::transform(r._bases, [](auto& base) { return std::end(base); }));
 		}
