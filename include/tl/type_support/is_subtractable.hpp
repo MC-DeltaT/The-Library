@@ -14,6 +14,7 @@ namespace tl::type_support {
 		template<typename T, typename U, typename = std::void_t<>>
 		struct is_subtractable_base : std::false_type {};
 
+
 		// Matches if T - U is valid.
 		template<typename T, typename U>
 		struct is_subtractable_base<T, U, std::void_t<decltype(std::declval<T>() - std::declval<U>())>> : std::true_type {};
