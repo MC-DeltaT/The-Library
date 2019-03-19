@@ -12,19 +12,19 @@ namespace tl::type_support {
 
 		// Matches if T - U is invalid.
 		template<typename T, typename U, typename = std::void_t<>>
-		struct is_subtractable_base : std::false_type {};
+		struct is_subtractable_impl : std::false_type {};
 
 
 		// Matches if T - U is valid.
 		template<typename T, typename U>
-		struct is_subtractable_base<T, U, std::void_t<decltype(std::declval<T>() - std::declval<U>())>> : std::true_type {};
+		struct is_subtractable_impl<T, U, std::void_t<decltype(std::declval<T>() - std::declval<U>())>> : std::true_type {};
 
 	}
 
 
 	// std::true_type if T - U is a valid expression for objects of those types, otherwise std::false_type.
 	template<typename T, typename U>
-	struct is_subtractable : detail::is_subtractable_base<T, U> {};
+	struct is_subtractable : detail::is_subtractable_impl<T, U> {};
 
 
 	template<typename T, typename U>
