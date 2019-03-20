@@ -21,6 +21,8 @@ namespace tl::type_support {
 	}
 
 
+	/* std::true_type if T and U are the same class template, otherwise std::false_type.
+		Only works for class templates with only type template parameters. */
 	template<template<typename...> class T, template<typename...> class U>
 	struct is_same_class_template : detail::is_same_class_template_impl<T, U> {};
 
