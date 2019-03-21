@@ -19,6 +19,14 @@ namespace tl::misc {
 		return static_cast<Derived const&>(base);
 	}
 
+
+	// Casts a CRTP base object to its derived type.
+	template<template<class> class Base, class Derived>
+	Derived&& crtp_derived_cast(Base<Derived>&& base)
+	{
+		return static_cast<Derived&&>(base);
+	}
+
 }
 
 
